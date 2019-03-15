@@ -2,6 +2,6 @@
     "version": 2,
     "name": "php-7",
     "builds": [
-        { "src": "*.php", "use": "@now/php" }
+        { "src": "buben/web/index.php", "use": "@now/php" }
     ]
 }
