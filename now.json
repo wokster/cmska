@@ -2,7 +2,7 @@
     "version": 2,
     "name": "php-7",
     "builds": [
-        { "src": "buben/web/index.php", "use": "@now/php" }
+        { "src": "/buben/web/index.php", "use": "@now/php" }
     ],
     "routes": [
     { "src": "/", "headers": {"cache-control": "s-maxage=1000"}, "dest": "/buben/web/index.php" }
