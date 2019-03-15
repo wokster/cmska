@@ -3,5 +3,6 @@
     "name": "php-7",
     "builds": [
         { "src": "buben/web/index.php", "use": "@now/php" }
-    ]
+    ],
+    { "src": "/", "headers": {"cache-control": "s-maxage=1000"}, "dest": "/buben/web/index.php" },
 }
