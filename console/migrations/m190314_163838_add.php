@@ -19,7 +19,17 @@ class m190314_163838_add extends Migration
         $user->setPassword('admin');
         $user->generateAuthKey();
         $user->save();
-        echo "admin created with:\r\nUsername: admin\r\nPassword: admin\r\n";
+        echo "user created with:\r\nUsername: admin\r\nPassword: admin\r\n";
+        $roleAdmin = Yii::$app->authManager->createRole('admin');
+        $roleAdmin->description = 'admin';
+        Yii::$app->authManager->add($roleAdmin);
+        echo "create role admin\r\n";
+        $role = Yii::$app->authManager->createRole('contentManager');
+        $role->description = 'contentManager';
+        Yii::$app->authManager->add($role);
+        echo "create role contentManager\r\n";
+        Yii::$app->authManager->assign($roleAdmin, $user->id);
+        echo "assign role admin to user \r\n";
     }
 
     /**

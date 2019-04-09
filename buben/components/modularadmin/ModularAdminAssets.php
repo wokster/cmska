@@ -31,6 +31,6 @@ class ModularAdminAssets extends AssetBundle
 	 */
 	public $css = [
 		'css/vendor.css',
-		'css/app.css',
+		/*'css/app.css'*/
 	];
 }

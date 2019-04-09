@@ -1333,11 +1333,12 @@ $(function () {
 
 	function setThemeState() {
 		// set theme type
+		console.log(themeUrl);
 		if (themeSettings.themeName) {
-			$styleLink.attr('href', 'css/app-' + themeSettings.themeName + '.css');
+			$styleLink.attr('href', themeUrl +'css/app-' + themeSettings.themeName + '.css');
 		}
 		else {
-			$styleLink.attr('href', 'css/app.css');
+			$styleLink.attr('href', themeUrl + 'css/app.css');
 		}
 
 		// App classes

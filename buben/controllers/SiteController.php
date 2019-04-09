@@ -64,6 +64,16 @@ class SiteController extends Controller
     }
 
     /**
+     * Display template editor
+     *
+     * @return string
+     */
+    public function actionTemplate()
+    {
+        return $this->render('template');
+    }
+
+    /**
      * Login action.
      *
      * @return string

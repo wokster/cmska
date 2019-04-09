@@ -4,10 +4,13 @@
 /* @var $content string */
 
 use yii\helpers\Html;
-use yii\widgets\Breadcrumbs;
+use buben\widgets\Breadcrumbs;
 use buben\widgets\Alert;
+use \yii\helpers\Url;
 
-\buben\components\modularadmin\ModularAdminAssets::register($this);
+\buben\assets\BubenAssets::register($this);
+$assets = \buben\components\modularadmin\ModularAdminAssets::register($this);
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -20,6 +23,20 @@ use buben\widgets\Alert;
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
+    <script>
+        var themeUrl = '<?=$assets->baseUrl?>/';
+        var themeSettings = (localStorage.getItem('themeSettings')) ? JSON.parse(localStorage.getItem('themeSettings')) :
+        {};
+        var themeName = themeSettings.themeName || '';
+        if (themeName)
+        {
+            document.write('<link rel="stylesheet" id="theme-style" href="' + themeUrl + '/css/app-' + themeName + '.css">');
+        }
+        else
+        {
+            document.write('<link rel="stylesheet" id="theme-style" href="' + themeUrl + '/css/app.css">');
+        }
+    </script>
 </head>
 <body>
 <?php $this->beginBody() ?>
@@ -45,10 +62,11 @@ use buben\widgets\Alert;
 
             </div>
             <div class="header-block header-block-nav">
+                <?php if(!Yii::$app->user->isGuest): ?>
                 <ul class="nav-profile">
                     <li class="notifications new">
                         <a href="" data-toggle="dropdown">
-                            <i class="fa fa-bell-o"></i>
+                            <i class="fas fa-at"></i>
                             <sup>
                                 <span class="counter">8</span>
                             </sup>
@@ -104,22 +122,24 @@ use buben\widgets\Alert;
                     </li>
                     <li class="profile dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                            <div class="img" style="background-image: url('https://avatars3.githubusercontent.com/u/3959008?v=3&s=40')"> </div>
-                            <span class="name"> John Doe </span>
+                            <div class="img" style="background-image: url('<?= Yii::$app->user->identity->avatar?>')"> </div>
+                            <span class="name"> <?= Yii::$app->user->identity->nickName ?> </span>
                         </a>
                         <div class="dropdown-menu profile-dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="<?= Url::toRoute(['site/index']) ?>">
+                                <i class="fas fa-home"></i> Dashboard </a>
+                            <a class="dropdown-item" href="<?= Url::toRoute(['user/view','id'=>Yii::$app->user->id]) ?>">
                                 <i class="fa fa-user icon"></i> Profile </a>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="<?= Url::toRoute(['request/index']) ?>">
                                 <i class="fa fa-bell icon"></i> Notifications </a>
-                            <a class="dropdown-item" href="#">
-                                <i class="fa fa-gear icon"></i> Settings </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="login.html">
+                            <a class="dropdown-item" href="<?= Url::toRoute(['site/logout']) ?>"
+                               data-confirm="Are you sure you want to logout?" data-method="post">
                                 <i class="fa fa-power-off icon"></i> Logout </a>
                         </div>
                     </li>
                 </ul>
+                <?php endif; ?>
             </div>
         </header>
         <aside class="sidebar">
@@ -133,166 +153,36 @@ use buben\widgets\Alert;
                 <nav class="menu">
                     <ul class="sidebar-menu metismenu" id="sidebar-menu">
                         <li class="active">
-                            <a href="index.html">
+                            <a href="/">
                                 <i class="fa fa-home"></i> Dashboard </a>
                         </li>
                         <li>
                             <a href="">
-                                <i class="fa fa-th-large"></i> Items Manager
+                                <i class="fa fa-th-large"></i> Elements
                                 <i class="fa arrow"></i>
                             </a>
                             <ul class="sidebar-nav">
                                 <li>
-                                    <a href="items-list.html"> Items List </a>
+                                    <a href="<?= Url::toRoute('element/index')?>"> list all </a>
                                 </li>
                                 <li>
-                                    <a href="item-editor.html"> Item Editor </a>
+                                    <a href="<?= Url::toRoute('element/create')?>"> add new </a>
                                 </li>
                             </ul>
                         </li>
                         <li>
                             <a href="">
-                                <i class="fa fa-area-chart"></i> Charts
+                                <i class="fa fa-th-large"></i> Template
                                 <i class="fa arrow"></i>
                             </a>
                             <ul class="sidebar-nav">
                                 <li>
-                                    <a href="charts-flot.html"> Flot Charts </a>
+                                    <a href="<?= Url::toRoute('template/edit')?>"> edit </a>
                                 </li>
                                 <li>
-                                    <a href="charts-morris.html"> Morris Charts </a>
+                                    <a href="<?= Url::toRoute('template/index')?>"> history </a>
                                 </li>
                             </ul>
-                        </li>
-                        <li>
-                            <a href="">
-                                <i class="fa fa-table"></i> Tables
-                                <i class="fa arrow"></i>
-                            </a>
-                            <ul class="sidebar-nav">
-                                <li>
-                                    <a href="static-tables.html"> Static Tables </a>
-                                </li>
-                                <li>
-                                    <a href="responsive-tables.html"> Responsive Tables </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="forms.html">
-                                <i class="fa fa-pencil-square-o"></i> Forms </a>
-                        </li>
-                        <li>
-                            <a href="">
-                                <i class="fa fa-desktop"></i> UI Elements
-                                <i class="fa arrow"></i>
-                            </a>
-                            <ul class="sidebar-nav">
-                                <li>
-                                    <a href="buttons.html"> Buttons </a>
-                                </li>
-                                <li>
-                                    <a href="cards.html"> Cards </a>
-                                </li>
-                                <li>
-                                    <a href="typography.html"> Typography </a>
-                                </li>
-                                <li>
-                                    <a href="icons.html"> Icons </a>
-                                </li>
-                                <li>
-                                    <a href="grid.html"> Grid </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="">
-                                <i class="fa fa-file-text-o"></i> Pages
-                                <i class="fa arrow"></i>
-                            </a>
-                            <ul class="sidebar-nav">
-                                <li>
-                                    <a href="login.html"> Login </a>
-                                </li>
-                                <li>
-                                    <a href="signup.html"> Sign Up </a>
-                                </li>
-                                <li>
-                                    <a href="reset.html"> Reset </a>
-                                </li>
-                                <li>
-                                    <a href="error-404.html"> Error 404 App </a>
-                                </li>
-                                <li>
-                                    <a href="error-404-alt.html"> Error 404 Global </a>
-                                </li>
-                                <li>
-                                    <a href="error-500.html"> Error 500 App </a>
-                                </li>
-                                <li>
-                                    <a href="error-500-alt.html"> Error 500 Global </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="">
-                                <i class="fa fa-sitemap"></i> Menu Levels
-                                <i class="fa arrow"></i>
-                            </a>
-                            <ul class="sidebar-nav">
-                                <li>
-                                    <a href="#"> Second Level Item
-                                        <i class="fa arrow"></i>
-                                    </a>
-                                    <ul class="sidebar-nav">
-                                        <li>
-                                            <a href="#"> Third Level Item </a>
-                                        </li>
-                                        <li>
-                                            <a href="#"> Third Level Item </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#"> Second Level Item </a>
-                                </li>
-                                <li>
-                                    <a href="#"> Second Level Item
-                                        <i class="fa arrow"></i>
-                                    </a>
-                                    <ul class="sidebar-nav">
-                                        <li>
-                                            <a href="#"> Third Level Item </a>
-                                        </li>
-                                        <li>
-                                            <a href="#"> Third Level Item </a>
-                                        </li>
-                                        <li>
-                                            <a href="#"> Third Level Item
-                                                <i class="fa arrow"></i>
-                                            </a>
-                                            <ul class="sidebar-nav">
-                                                <li>
-                                                    <a href="#"> Fourth Level Item </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#"> Fourth Level Item </a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="screenful.html">
-                                <i class="fa fa-bar-chart"></i> Agile Metrics
-                                <span class="label label-screenful">by Screenful</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://github.com/modularcode/modular-admin-html">
-                                <i class="fa fa-github-alt"></i> Theme Docs </a>
                         </li>
                     </ul>
                 </nav>
@@ -398,11 +288,15 @@ use buben\widgets\Alert;
         <div class="sidebar-mobile-menu-handle" id="sidebar-mobile-menu-handle"></div>
         <div class="mobile-menu-handle"></div>
         <article class="content dashboard-page">
+
             <?= Breadcrumbs::widget([
-                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : []
             ]) ?>
+
             <?= Alert::widget() ?>
+
             <?= $content ?>
+
         </article>
         <footer class="footer">
             <div class="footer-block buttons">

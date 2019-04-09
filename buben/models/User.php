@@ -179,4 +179,42 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+
+    /**
+     * get user roles
+     * @return \yii\rbac\Role[]
+     */
+    public function getRoles()
+    {
+        return \Yii::$app->authManager->getRolesByUser($this->id);
+    }
+
+    /**
+     * Check is assign role admin to user
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return isset($this->roles['admin']);
+    }
+
+    /**
+     * return avatar depends of role
+     * @return string
+     */
+    public function getAvatar()
+    {
+        $url = $this->isAdmin() ? '/img/admin.png' : '/img/user.png';
+        return \Yii::$app->urlManager->createAbsoluteUrl($url);
+    }
+
+    /**
+     * return user nickName
+     * @return string
+     */
+    public function getNickName()
+    {
+        return $this->isAdmin() ? 'Владыка' : $this->username;
+    }
+
 }

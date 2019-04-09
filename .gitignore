@@ -1,8 +1,7 @@
-assets/*
-!assets/.gitignore
-protected/runtime/*
-!protected/runtime/.gitignore
-protected/data/*.db
-themes/classic/views/
-
+buben/web/admin/assets/*
+buben/web/front/*
+!buben/assets/.gitignore
+buben/runtime/*
+!buben/runtime/.gitignore
+buben/data/*.db
 /vendor/

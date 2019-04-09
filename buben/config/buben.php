@@ -13,12 +13,35 @@ return [
     'id' => 'buben-backend',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'buben\controllers',
-    'bootstrap' => ['log'],
+    'bootstrap' => [
+        'log',
+        'gii',
+        'debug'
+    ],
+    'modules' => [
+        'debug' => [
+            'class' => 'yii\debug\Module',
+        ],
+        'gii' => [
+            'class' => 'yii\gii\Module',
+            'generators' => [
+                'crud' => [
+                    'class' => 'yii\gii\generators\crud\Generator',
+                    'templates' => [ //setting for out templates
+                        'buben:IamCrud' => '@buben/templates/crud/default',
+                    ]
+                ]
+            ],
+        ],
+    ],
     'components' => [
         'user' => [
             'identityClass' => 'buben\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-buben', 'httpOnly' => true],
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager'
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -63,6 +86,18 @@ return [
                 ],
                 'yii\bootstrap\BootstrapAsset' => [
                     'css' => [],
+                ],
+            ],
+        ],
+        'i18n' => [
+            'translations' => [
+                'app*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                ],
+                'buben' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@buben/messages',
+                    'sourceLanguage' => 'en-US',
                 ],
             ],
         ],

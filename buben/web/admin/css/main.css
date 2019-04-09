@@ -1,0 +1,15 @@
+.fa.min-arrow:before {
+  content: "\f106";
+}
+.minimize .fa.min-arrow:before {
+  content: "\f107";
+}
+.minimize .card-footer, .minimize .card-block {
+  display: none;
+}
+.card-footer, .card-block {
+  display: block;
+}
+.breadcrumb {
+  padding-bottom: 7px;
+}
