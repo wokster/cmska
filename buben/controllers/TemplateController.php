@@ -51,33 +51,37 @@ class TemplateController extends Controller
     /**
      * Updates an existing Template model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param null $id
      *
-     * @return \yii\web\Response
-     * @throws \yii\base\ErrorException
+     * @return string|\yii\web\Response
      * @throws \yii\web\NotFoundHttpException
      */
-    public function actionEdit($id = null)
+    public function actionEdit()
     {
-        $model = $id ? $this->getModelById($id) : $this->getLastModel();
-        if($model){
-            if ($model->load(Yii::$app->request->post())) {
-                if(!$model->save()){
-                    Yii::error(Json::encode($model->firstErrors));
-                }
-                return $this->redirect(['edit']);
+        if($name = Yii::$app->request->get('name')){
+            if($version = Yii::$app->request->get('version')){
+                $model = $this->getModel($name,$version);
             }else{
-                $build = new Build();
-                $build->name = $model->name;
-                $build->version = $model->version;
-                return $this->render('edit',[
-                    'model' => $model,
-                    'names' => $this->getNames(),
-                    'build' => $build
-                ]);
+                $model = $this->getLastModelByName($name);
             }
+        }else{
+            $model = $this->getLastModel();
         }
-        throw new ErrorException("X3 ERROR");
+
+        if ($model->load(Yii::$app->request->post())) {
+            if(!$model->save()){
+                Yii::error(Json::encode($model->firstErrors));
+            }
+            return $this->redirect(['edit']);
+        }else{
+            $build = new Build();
+            $build->name = $model->name;
+            $build->version = $model->version;
+            return $this->render('edit',[
+                'model' => $model,
+                'names' => $this->getNames(),
+                'build' => $build
+            ]);
+        }
     }
 
     public function actionBuild(){
@@ -102,20 +106,46 @@ class TemplateController extends Controller
 
     /**
      * @return array|\buben\models\Template|null
+     * @throws \yii\web\NotFoundHttpException
      */
     private function getLastModel(){
-        $model = Template::find()->orderBy('id DESC')->with('versions')->one();
-        return $model ? $model : new Template();
+        if($model = Template::find()->orderBy('id DESC')->with('versions')->one()){
+            return $model;
+        }elseif (!Template::find()->exists()){
+            return new Template();
+        }
+        throw new NotFoundHttpException();
     }
 
     /**
-     * @param $id
+     * @param $name
      *
      * @return array|\buben\models\Template|null
      * @throws \yii\web\NotFoundHttpException
      */
-    private function getModelById($id){
-        if($model = Template::find()->andWhere(['id'=>$id])->with('versions')->one()){
+    private function getLastModelByName($name){
+        if($model = Template::find()
+            ->andWhere(['name' => $name])
+            ->orderBy('id DESC')
+            ->with('versions')->one()){
+                return $model;
+        }
+        throw new NotFoundHttpException();
+    }
+
+    /**
+     * @param $name
+     * @param $version
+     *
+     * @return array|\buben\models\Template|null
+     * @throws \yii\web\NotFoundHttpException
+     *
+     */
+    private function getModel($name,$version){
+        if($model = Template::find()->andWhere([
+            'name' => $name,
+            'version' => $version
+        ])->with('versions')->one()){
             return $model;
         }
         throw new NotFoundHttpException();
